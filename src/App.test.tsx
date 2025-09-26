@@ -2,9 +2,9 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import App from './App';
 
-test('renders pinterest mood board generator', () => {
+test('renders universal mood board generator', () => {
   render(<App />);
-  const titleElement = screen.getByText('Pinterest Mood Board Generator');
+  const titleElement = screen.getByText('Universal Mood Board Generator');
   expect(titleElement).toBeInTheDocument();
 });
 

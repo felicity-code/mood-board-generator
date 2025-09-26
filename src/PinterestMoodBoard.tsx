@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import RealPinterestService, { PinterestImage } from './services/realPinterestService';
+import GoogleImagesService, { GoogleImage } from './services/googleImagesService';
 import ExportModal from './components/ExportModal';
 
-const pinterestService = new RealPinterestService();
+const imageService = new GoogleImagesService();
 
 function PinterestMoodBoard(): React.JSX.Element {
   const [prompt, setPrompt] = useState('');
-  const [images, setImages] = useState<PinterestImage[]>([]);
+  const [images, setImages] = useState<GoogleImage[]>([]);
   const [showBoard, setShowBoard] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedImage, setSelectedImage] = useState<PinterestImage | null>(null);
+  const [selectedImage, setSelectedImage] = useState<GoogleImage | null>(null);
   const [showExportModal, setShowExportModal] = useState(false);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ function PinterestMoodBoard(): React.JSX.Element {
     try {
       // Use the custom prompt if provided, otherwise use selected category
       const searchQuery = prompt.trim() || selectedCategory || 'interior design';
-      console.log('Searching Pinterest-style images for:', searchQuery);
+      console.log('Searching images from multiple sources for:', searchQuery);
 
       // Clear category selection when using custom prompt
       if (prompt.trim()) {
@@ -40,13 +40,13 @@ function PinterestMoodBoard(): React.JSX.Element {
       }
 
       // Fetch 9 images for a better Pinterest-like grid
-      const fetchedImages = await pinterestService.searchImages(searchQuery, 9);
+      const fetchedImages = await imageService.searchImages(searchQuery, 9);
       setImages(fetchedImages);
       setShowBoard(true);
     } catch (error) {
       console.error('Error fetching images:', error);
       // Use fallback images on error
-      const fallbackImages = await pinterestService.searchImages('interior design', 9);
+      const fallbackImages = await imageService.searchImages('interior design', 9);
       setImages(fallbackImages);
       setShowBoard(true);
     } finally {
@@ -60,7 +60,7 @@ function PinterestMoodBoard(): React.JSX.Element {
     setIsLoading(true);
     try {
       // Fetch 9 images for better variety
-      const fetchedImages = await pinterestService.getImagesByCategory(category, 9);
+      const fetchedImages = await imageService.getImagesByCategory(category, 9);
       setImages(fetchedImages);
       setShowBoard(true);
     } catch (error) {
@@ -151,7 +151,7 @@ function PinterestMoodBoard(): React.JSX.Element {
               color: colors.text,
               transition: 'color 0.3s ease'
             }}>
-              Pinterest Mood Board Generator
+              Universal Mood Board Generator
             </h1>
           </div>
 
@@ -160,7 +160,7 @@ function PinterestMoodBoard(): React.JSX.Element {
             marginBottom: '1.5rem',
             fontSize: '1rem'
           }}>
-            Create beautiful mood boards with Pinterest-style images
+            Create beautiful mood boards with images from Google, Pexels, Pixabay & more
           </p>
 
           <div style={{ marginBottom: '1.5rem' }}>
@@ -263,7 +263,7 @@ function PinterestMoodBoard(): React.JSX.Element {
             {isLoading ? (
               <>
                 <span style={{ animation: 'spin 1s linear infinite' }}>⏳</span>
-                Fetching Pinterest Images...
+                Searching Images...
               </>
             ) : (
               <>
@@ -328,7 +328,7 @@ function PinterestMoodBoard(): React.JSX.Element {
               gap: '0.5rem'
             }}>
               <span>📌</span>
-              Your Pinterest Mood Board
+              Your Mood Board
             </h1>
             <p style={{
               color: colors.textSecondary,
@@ -400,7 +400,7 @@ function PinterestMoodBoard(): React.JSX.Element {
               <div style={{
                 position: 'relative',
                 paddingBottom: '133%', // 4:3 aspect ratio
-                backgroundColor: image.color || colors.cardBg
+                backgroundColor: colors.cardBg
               }}>
                 <img
                   src={image.thumbnail || image.url}
@@ -419,7 +419,7 @@ function PinterestMoodBoard(): React.JSX.Element {
                   }}
                 />
               </div>
-              {image.title && (
+              {(image.title || image.source) && (
                 <div style={{
                   padding: '0.75rem',
                   backgroundColor: colors.bgSecondary
@@ -432,13 +432,14 @@ function PinterestMoodBoard(): React.JSX.Element {
                   }}>
                     {image.title}
                   </p>
-                  {image.description && (
+                  {image.source && (
                     <p style={{
                       color: colors.textSecondary,
-                      fontSize: '0.75rem',
-                      marginTop: '0.25rem'
+                      fontSize: '0.7rem',
+                      marginTop: '0.25rem',
+                      opacity: 0.7
                     }}>
-                      {image.description}
+                      via {image.source}
                     </p>
                   )}
                 </div>

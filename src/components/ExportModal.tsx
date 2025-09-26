@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Download, X, Image, FileText } from 'lucide-react';
 import ExportService, { ExportOptions, ExportProgress } from '../services/exportService';
-import { PinterestImage } from '../services/realPinterestService';
+import { GoogleImage } from '../services/googleImagesService';
 
 interface ExportModalProps {
   isOpen: boolean;
   onClose: () => void;
-  images: PinterestImage[];
+  images: GoogleImage[];
   title: string;
 }
 

@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { PinterestImage } from './realPinterestService';
+import { GoogleImage } from './googleImagesService';
 
 export interface ExportOptions {
   format: 'png' | 'jpeg' | 'pdf';
@@ -27,7 +27,7 @@ class ExportService {
    * Export mood board as PNG image
    */
   async exportAsPNG(
-    images: PinterestImage[],
+    images: GoogleImage[],
     title: string,
     options: ExportOptions
   ): Promise<void> {
@@ -73,7 +73,7 @@ class ExportService {
    * Export mood board as JPEG image
    */
   async exportAsJPEG(
-    images: PinterestImage[],
+    images: GoogleImage[],
     title: string,
     options: ExportOptions
   ): Promise<void> {
@@ -119,7 +119,7 @@ class ExportService {
    * Export mood board as PDF document
    */
   async exportAsPDF(
-    images: PinterestImage[],
+    images: GoogleImage[],
     title: string,
     options: ExportOptions
   ): Promise<void> {
@@ -178,7 +178,7 @@ class ExportService {
    * Create a temporary container for the mood board
    */
   private async createMoodBoardContainer(
-    images: PinterestImage[],
+    images: GoogleImage[],
     title: string,
     options: ExportOptions
   ): Promise<HTMLElement> {
@@ -243,7 +243,7 @@ class ExportService {
    */
   private async addImagesToPDFPage(
     pdf: jsPDF,
-    images: PinterestImage[],
+    images: GoogleImage[],
     pageNumber: number,
     totalPages: number
   ): Promise<void> {

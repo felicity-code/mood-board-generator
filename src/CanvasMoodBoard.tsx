@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Stage, Layer, Image as KonvaImage, Transformer, Rect, Text } from 'react-konva';
 import Konva from 'konva';
 import GoogleImagesService, { GoogleImage } from './services/googleImagesService';
-import ExportModal from './components/ExportModal';
+import EnhancedExportModal from './components/EnhancedExportModal';
 
 const imageService = new GoogleImagesService();
 
@@ -161,16 +161,8 @@ function CanvasMoodBoard(): React.JSX.Element {
     }));
   };
 
-  const exportCanvas = () => {
-    if (stageRef.current) {
-      const uri = stageRef.current.toDataURL();
-      const link = document.createElement('a');
-      link.download = 'mood-board.png';
-      link.href = uri;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+  const handleOpenExportModal = () => {
+    setShowExportModal(true);
   };
 
   const colors = {
@@ -462,7 +454,7 @@ function CanvasMoodBoard(): React.JSX.Element {
                   🗑️ Clear Canvas
                 </button>
                 <button
-                  onClick={exportCanvas}
+                  onClick={handleOpenExportModal}
                   style={{
                     padding: '0.75rem 1.5rem',
                     backgroundColor: colors.primaryBg,
@@ -791,12 +783,13 @@ function CanvasMoodBoard(): React.JSX.Element {
         }
       `}</style>
 
-      {/* Export Modal */}
-      <ExportModal
+      {/* Enhanced Export Modal */}
+      <EnhancedExportModal
         isOpen={showExportModal}
         onClose={() => setShowExportModal(false)}
-        images={fetchedImages}
-        title={prompt || selectedCategory || 'Mood Board'}
+        stage={showCanvas ? stageRef.current : null}
+        title={prompt || selectedCategory || 'Canvas Mood Board'}
+        description={`Created with ${canvasImages.length} images`}
       />
     </div>
   );
